@@ -1,0 +1,31 @@
+from fastapi import FastAPI, File, UploadFile
+from pydantic import BaseModel
+import uvicorn
+
+app = FastAPI()
+
+# This will hold the user info (for now, just their weight goal)
+class UserInfo(BaseModel):
+    weight_goal: str  # 'gain', 'lose', or 'maintain'
+    current_weight: float
+    height: float
+    age: int
+
+# Simulate food recognition (for now just a simple endpoint)
+@app.post("/upload-food/")
+async def upload_food(file: UploadFile = File(...)):
+    # In a real app, here we would call an image recognition model
+    food_name = "Example Food"
+    calories = 250  # A placeholder value for calories
+
+    return {"food_name": food_name, "calories": calories}
+
+# Simulate weight tracking (user submits weight data)
+@app.post("/track-weight/")
+async def track_weight(user_info: UserInfo):
+    # In a real app, we'd store user data and calculate progress here
+    return {"message": "User weight data has been tracked", "user_info": user_info}
+
+# To run the server (this is just for development)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
